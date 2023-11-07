@@ -1,4 +1,4 @@
-import useWindowDimensions from './useWindowDimensions';
+import useWindowDimensions from '../Utilities/Utilities';
 import Confetti from 'react-confetti';
 
 export default () => {

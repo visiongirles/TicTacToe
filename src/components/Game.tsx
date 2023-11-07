@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Field from './Field';
 import GameOver from './GameOver';
-import Confetti from '../assets/customAnimation/Confetti';
+import Confetti from '../assets/animation/Confetti';
 
 interface Model {
   squares: string[];
@@ -60,6 +60,7 @@ function Game() {
           resetGame={handleResetGame}
         />
         <GameOver winner={winner} resetGame={handleResetGame} />
+        {/*  Добавить случай if (winner === 'NONE') - анимации не будет */}
         <Confetti />
       </>
     );
@@ -101,7 +102,7 @@ function Game() {
       }
     }
 
-    if (count == 9) return 'NONE';
+    if (count === 9) return 'NONE';
 
     return null;
   }
