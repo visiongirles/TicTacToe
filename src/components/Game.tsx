@@ -60,6 +60,7 @@ function Game() {
           resetGame={handleResetGame}
         />
         <GameOver winner={winner} resetGame={handleResetGame} />
+        <Confetti />
       </>
     );
   } else {
@@ -74,7 +75,6 @@ function Game() {
         handleClick={handleClick}
         resetGame={handleResetGame}
       />
-      <Confetti />
     </>
   );
 

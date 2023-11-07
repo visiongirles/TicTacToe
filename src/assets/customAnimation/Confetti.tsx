@@ -1,5 +1,8 @@
-function Confetti() {
-  return <div className='js-container-main main-container-confetti'></div>;
-}
+import useWindowDimensions from './useWindowDimensions';
+import Confetti from 'react-confetti';
 
-export default Confetti;
+export default () => {
+  const { width, height } = useWindowDimensions();
+
+  return <Confetti width={width} height={height} />;
+};
