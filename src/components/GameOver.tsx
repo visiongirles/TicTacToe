@@ -1,24 +1,28 @@
+import { Player, PlayerValues, WinnerType } from '../logic/tictactoe';
 import TryAgain from './TryAgain';
 
 interface GameOverProps {
   winner: string;
+  activePlayer?: PlayerValues;
   resetGame: () => void;
 }
 
-function GameOver({ winner, resetGame }: GameOverProps) {
+function GameOver({ winner, activePlayer, resetGame }: GameOverProps) {
   let status = 'Winner is';
   let transformmedWinner;
-  if (winner == 'NONE') {
+  if (winner === WinnerType.Draw) {
     status = 'EVEN';
     transformmedWinner = 'NO ONE WINS';
-  } else if (winner == 'X') {
-    transformmedWinner = 'X';
-  } else {
-    transformmedWinner = '❤️';
+  } else if (winner === WinnerType.Player) {
+    if (activePlayer === Player.Cross) {
+      transformmedWinner = 'X';
+    } else {
+      transformmedWinner = '❤️';
+    }
   }
 
   const modalBodyClass =
-    winner == 'NONE'
+    winner === 'NONE'
       ? 'modal-body container'
       : 'modal-body container confetti-container confetti';
   return (

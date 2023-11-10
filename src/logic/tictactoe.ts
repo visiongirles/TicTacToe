@@ -1,4 +1,4 @@
-import { makeAutoObservable } from 'mobx';
+import { makeObservable, observable, computed, action, flow } from 'mobx';
 
 export type ObjectValues<T> = T[keyof T];
 
@@ -54,18 +54,25 @@ const winningCombination = [
 ];
 
 export class TicTacToe {
-  private gameState: GameState = { state: GameStateKind.NotStarted };
-  private field: (PlayerValues | undefined)[] = Array(9);
+  gameState: GameState = { state: GameStateKind.NotStarted };
+  field: (PlayerValues | undefined)[] = Array(9);
 
   constructor() {
-    makeAutoObservable(this);
+    makeObservable(this, {
+      getState: computed,
+      getField: computed,
+      action: action,
+      start: action,
+      gameState: observable.ref,
+      field: observable.ref,
+    });
   }
 
-  getState(): GameState {
+  get getState(): GameState {
     return this.gameState;
   }
 
-  getField() {
+  get getField() {
     return this.field;
   }
 
@@ -73,6 +80,7 @@ export class TicTacToe {
    * Это функция, которая возращается текущий GameStateKind.
    */
   start() {
+    // TODO: подумать
     this.gameState = {
       state: GameStateKind.Progress,
       activePlayer: Player.Cross,
@@ -112,7 +120,7 @@ export class TicTacToe {
       case WinnerType.Draw: {
         this.gameState = {
           state: GameStateKind.Finished,
-          gameOverStatus: WinnerType.None,
+          gameOverStatus: WinnerType.Draw,
         };
         break;
       }

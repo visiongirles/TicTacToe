@@ -1,41 +1,33 @@
-import { useState } from 'react';
 import Field from './Field';
 import GameOver from './GameOver';
 import { TicTacToe } from '../logic/tictactoe';
 import { GameStateKind } from '../logic/tictactoe';
 import Confetti from '../assets/animation/Confetti';
 import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 
-const Game = observer (({ game }) =>
+const game = new TicTacToe();
+
+const Game = observer(() => {
   //Declaration of Hooks
   // Store the board's status
-
-// const Game = observer(({ game }) => <span>Seconds passed: {timer.secondsPassed}</span>);
-
-  // const [game, setGame] = useState(new TicTacToe());
-
   // Display the status of the game: the turn OR the winner
-  let status;
-  let field = game.fie
-  let gameState = game.getState();
-  const winner = game.getWinner();
 
+  useEffect(() => game.start(), []);
+  let status;
+  let field = game.getField;
+  let gameState = game.getState;
+  const winner = game.getWinner();
 
   //Handle Click funtion - what happens when User clicks on the button
   function handleClick(index: number) {
     if (game.action(index)) {
-      console.log(game);
-
-      setGame(game);
-      console.log(game);
       return;
     }
   }
 
   function handleResetGame() {
     game.start();
-    console.log(game);
-    setGame(game);
   }
 
   if (gameState.state === GameStateKind.Finished) {
@@ -48,7 +40,11 @@ const Game = observer (({ game }) =>
           handleClick={handleClick}
           resetGame={handleResetGame}
         />
-        <GameOver winner={winner} resetGame={handleResetGame} />
+        <GameOver
+          winner={winner}
+          activePlayer={game.gameState.activePlayer}
+          resetGame={handleResetGame}
+        />
         <Confetti />
       </>
     );
@@ -66,6 +62,6 @@ const Game = observer (({ game }) =>
       />
     </>
   );
-})
+});
 
 export default Game;
