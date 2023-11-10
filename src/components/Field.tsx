@@ -1,7 +1,7 @@
 import Mark from './Mark';
 import TryAgain from './TryAgain';
 
-import { PlayerValues } from '../logic/NO_ENUM_tictactoe';
+import { PlayerValues } from '../logic/tictactoe';
 
 interface FieldProps {
   status: string;

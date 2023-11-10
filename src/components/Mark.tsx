@@ -1,6 +1,6 @@
 import cross from '../assets/images/cross.svg';
 import heart from '../assets/images/heart.svg';
-import { Player, PlayerValues } from '../logic/NO_ENUM_tictactoe';
+import { Player, PlayerValues } from '../logic/tictactoe';
 
 interface MarkProps {
   content: PlayerValues | undefined;

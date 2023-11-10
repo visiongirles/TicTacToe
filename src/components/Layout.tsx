@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Field from './Field';
 import GameOver from './GameOver';
-import { TicTacToe } from '../logic/NO_ENUM_tictactoe';
-import { GameStateKind } from '../logic/NO_ENUM_tictactoe';
+import { TicTacToe } from '../logic/tictactoe';
+import { GameStateKind } from '../logic/tictactoe';
 import Confetti from '../assets/animation/Confetti';
 import { observer } from 'mobx-react-lite';
 
