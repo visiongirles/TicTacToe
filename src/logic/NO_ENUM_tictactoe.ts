@@ -1,19 +1,30 @@
-const GameError = {
+import { makeAutoObservable } from 'mobx';
+
+export type ObjectValues<T> = T[keyof T];
+
+export const GameError = {
+  None: 'none',
   NotValidIndex: 'not-valid-index',
   NotValidGameState: 'not-valid-game-state',
   IndexAlreadyFilled: 'index-already-filled',
 } as const;
 
-const WinnerType = {
+export type GameErrorValues = ObjectValues<typeof GameError>;
+
+export const WinnerType = {
   Player: 'player',
   Draw: 'draw',
   None: 'none',
 } as const;
 
-const Player = {
+export type WinnerTypeValues = ObjectValues<typeof WinnerType>;
+
+export const Player = {
   Cross: 'cross',
   Circle: 'circle',
 } as const;
+
+export type PlayerValues = ObjectValues<typeof Player>;
 
 export const GameStateKind = {
   NotStarted: 'not-started',
@@ -21,32 +32,15 @@ export const GameStateKind = {
   Finished: 'finished',
 } as const;
 
+export type GameStateKindValues = ObjectValues<typeof GameStateKind>;
+
 interface GameState {
-  type: TypeGameStateKind;
-  activePlayer?: TypePlayer;
-  winner?: TypePlayer;
+  state: GameStateKindValues;
+  activePlayer?: PlayerValues;
+  gameOverStatus?: WinnerTypeValues;
 }
 
-// interface GameNotStarted {
-//   type: TypeGameStateKind;
-// }
-
-// interface GameInProgress {
-//   type: TypeGameStateKind;
-//   activePlayer: TypePlayer;
-// }
-
-// interface GameFinished {
-//   type: TypeGameStateKind;
-//   winner?: TypePlayer;
-// }
-
-type GameState = GameNotStarted | GameInProgress | GameFinished;
-type ObjectValues<T> = T[keyof T];
-
-type TypeGameStateKind = ObjectValues<typeof GameStateKind>;
-type TypePlayer = ObjectValues<typeof Player>;
-type TypeGameStateKindNotStarted = typeof GameStateKind.NotStarted;
+// type GameState = GameNotStarted | GameInProgress|  GameFinished;
 
 const winningCombination = [
   [0, 1, 2],
@@ -60,8 +54,12 @@ const winningCombination = [
 ];
 
 export class TicTacToe {
-  private gameState: GameState = { type: GameStateKind.NotStarted };
-  private field: (Player | null)[] = Array(9);
+  private gameState: GameState = { state: GameStateKind.NotStarted };
+  private field: (PlayerValues | undefined)[] = Array(9);
+
+  constructor() {
+    makeAutoObservable(this);
+  }
 
   getState(): GameState {
     return this.gameState;
@@ -76,25 +74,26 @@ export class TicTacToe {
    */
   start() {
     this.gameState = {
-      type: GameStateKind.Progress,
+      state: GameStateKind.Progress,
       activePlayer: Player.Cross,
     };
-    this.field.fill(null);
+    this.field.fill(undefined);
   }
 
   /**
    * Это функция, которая возращается текущий GameStateKind.
    * @param {number} index - индекс массива для его отражения на игровом поле Field.
    */
-  action(index: number): GameError {
-    if (this.gameState.type != GameStateKind.Progress) {
+  action(index: number): GameErrorValues {
+    if (this.gameState.state !== GameStateKind.Progress) {
       return GameError.NotValidGameState;
     }
     if (index > 8 || index < 0) {
       return GameError.NotValidIndex;
     }
 
-    if (this.field[index] != null) {
+    // TODO: Проверить, чтобы не ломалось, если пользователь кликнул два раза на один квадратик
+    if (this.field[index] !== undefined) {
       return GameError.IndexAlreadyFilled;
     }
 
@@ -104,32 +103,35 @@ export class TicTacToe {
     switch (winner) {
       case WinnerType.Player: {
         this.gameState = {
-          type: GameStateKind.Finished,
-          winner: this.gameState.activePlayer,
+          state: GameStateKind.Finished,
+          gameOverStatus: WinnerType.Player,
         };
         break;
       }
 
       case WinnerType.Draw: {
-        this.gameState = { type: GameStateKind.Finished, winner: 'NONE' };
+        this.gameState = {
+          state: GameStateKind.Finished,
+          gameOverStatus: WinnerType.None,
+        };
         break;
       }
 
       case WinnerType.None: {
         this.gameState = {
-          type: GameStateKind.Progress,
+          state: GameStateKind.Progress,
           activePlayer:
-            this.gameState.activePlayer == Player.Cross
+            this.gameState.activePlayer === Player.Cross
               ? Player.Circle
               : Player.Cross,
         };
         break;
       }
     }
-    return GameError.NONE;
+    return GameError.None;
   }
 
-  getWinner(): WinnerType {
+  getWinner(): WinnerTypeValues {
     for (let index = 0; index < winningCombination.length; index++) {
       const [a, b, c] = winningCombination[index];
       if (
@@ -141,7 +143,7 @@ export class TicTacToe {
       }
     }
 
-    if (this.field.every((item) => item != null)) {
+    if (this.field.every((item) => item !== undefined)) {
       return WinnerType.Draw;
     }
     return WinnerType.None;

@@ -1,9 +1,11 @@
 import Mark from './Mark';
 import TryAgain from './TryAgain';
 
+import { PlayerValues } from '../logic/NO_ENUM_tictactoe';
+
 interface FieldProps {
   status: string;
-  squares: string[];
+  squares: (PlayerValues | undefined)[];
   handleClick: (index: number) => void;
   resetGame: () => void;
 }
