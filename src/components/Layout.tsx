@@ -49,7 +49,8 @@ const Game = observer(() => {
       </>
     );
   } else {
-    status = 'Active player is ' + (gameState.state ? 'X' : '❤️');
+    // TODO: переделать ниже
+    status = 'Active player is ' + (gameState.activePlayer ? 'X' : '❤️');
   }
 
   return (

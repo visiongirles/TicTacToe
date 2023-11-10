@@ -8,11 +8,13 @@ interface GameOverProps {
 }
 
 function GameOver({ winner, activePlayer, resetGame }: GameOverProps) {
+  console.log(activePlayer);
   let status = 'Winner is';
   let transformmedWinner;
   if (winner === WinnerType.Draw) {
     status = 'EVEN';
     transformmedWinner = 'NO ONE WINS';
+    // переделать ниже
   } else if (winner === WinnerType.Player) {
     if (activePlayer === Player.Cross) {
       transformmedWinner = 'X';
