@@ -101,9 +101,9 @@ export class TicTacToe {
     }
 
     // TODO: Проверить, чтобы не ломалось, если пользователь кликнул два раза на один квадратик
-    if (this.field[index] !== undefined) {
-      return GameError.IndexAlreadyFilled;
-    }
+    // if (this.field[index] !== undefined) {
+    //   return GameError.IndexAlreadyFilled;
+    // }
 
     this.field[index] = this.gameState.activePlayer;
     const winner = this.getWinner();
