@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 const game = new TicTacToe();
 
 const Game = observer(() => {
-  //Declaration of Hooks
+  // Declaration of Hooks
   // Store the board's status
   // Display the status of the game: the turn OR the winner
 
