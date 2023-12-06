@@ -3,7 +3,7 @@ enum Theme {
   Hearts = 'hearts',
 }
 
-enum Player {
+const enum Player {
   Cross = 'cross',
   Circle = 'circle',
 }
@@ -14,19 +14,19 @@ function togglePlayer(activePlayer: Player): Player {
 
 type Mark = Player | null;
 
-interface ResetGameAction {
-  type: GameAction.ResetGame;
-}
+// interface ResetGameAction {
+//   type: GameAction.ResetGame;
+// }
 
-interface PlaceMarkAction {
-  type: GameAction.PlaceMark;
-  index: number;
-  activePlayer: Player;
-}
+// interface PlaceMarkAction {
+//   type: GameAction.PlaceMark;
+//   index: number;
+//   activePlayer: Player;
+// }
 
-type Action = ResetGameAction | PlaceMarkAction;
+// type Action = ResetGameAction | PlaceMarkAction;
 
-enum GameAction {
+const enum GameAction {
   ResetGame = 'reset game',
   PlaceMark = 'place mark',
   ChooseTheme = 'choose theme',
@@ -40,11 +40,34 @@ interface Game {
   winner: Winner;
 }
 
-enum Winner {
+const enum Winner {
   Player = 'player',
   Even = 'even',
   None = 'none',
 }
+
+// function PlaceMarkActionOops<T extends any>(index: number, value: T): T {
+//   return {
+//     type: value,
+//     index: index,
+//   };
+// }
+
+const placeMarkAction = (index: number, activePlayer: Player) =>
+  ({
+    type: GameAction.PlaceMark,
+    index,
+    activePlayer,
+  } as const);
+
+const resetGamekAction = () =>
+  ({
+    type: GameAction.ResetGame,
+  } as const);
+
+type Action =
+  | ReturnType<typeof placeMarkAction>
+  | ReturnType<typeof resetGamekAction>;
 
 export default function gameReducer(state: Game, action: Action): Game {
   switch (action.type) {
