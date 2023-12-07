@@ -14,18 +14,6 @@ function togglePlayer(activePlayer: Player): Player {
 
 type Mark = Player | null;
 
-// interface ResetGameAction {
-//   type: GameAction.ResetGame;
-// }
-
-// interface PlaceMarkAction {
-//   type: GameAction.PlaceMark;
-//   index: number;
-//   activePlayer: Player;
-// }
-
-// type Action = ResetGameAction | PlaceMarkAction;
-
 const enum GameAction {
   ResetGame = 'reset game',
   PlaceMark = 'place mark',
@@ -45,13 +33,6 @@ const enum Winner {
   Even = 'even',
   None = 'none',
 }
-
-// function PlaceMarkActionOops<T extends any>(index: number, value: T): T {
-//   return {
-//     type: value,
-//     index: index,
-//   };
-// }
 
 const placeMarkAction = (index: number, activePlayer: Player) =>
   ({
