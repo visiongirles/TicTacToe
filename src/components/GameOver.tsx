@@ -1,13 +1,13 @@
 import { Player, PlayerValues, WinnerType } from '../logic/tictactoe';
 import TryAgain from './TryAgain';
 
-interface GameOverProps {
-  winner: string;
-  activePlayer?: PlayerValues;
-  resetGame: () => void;
-}
+// interface GameOverProps {
+//   winner: string;
+//   activePlayer?: PlayerValues;
+//   resetGame: () => void;
+// }
 
-function GameOver({ winner, activePlayer, resetGame }: GameOverProps) {
+function GameOver() {
   console.log(activePlayer);
   let status = 'Winner is';
   let transformmedWinner;

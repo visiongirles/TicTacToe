@@ -1,16 +1,16 @@
 import Mark from './Mark';
 import TryAgain from './TryAgain';
 
-import { PlayerValues } from '../logic/tictactoe';
+// import { PlayerValues } from '../logic/tictactoe';
 
-interface FieldProps {
-  status: string;
-  squares: (PlayerValues | undefined)[];
-  handleClick: (index: number) => void;
-  resetGame: () => void;
-}
+// interface FieldProps {
+//   status: string;
+//   squares: (PlayerValues | undefined)[];
+//   handleClick: (index: number) => void;
+//   resetGame: () => void;
+// }
 
-function Field({ status, squares, handleClick, resetGame }: FieldProps) {
+function Field() {
   const rows = [0, 1, 2];
   const columns = [0, 1, 2];
 

@@ -1,56 +1,51 @@
-enum Theme {
-  Classic = 'classic',
-  Hearts = 'hearts',
+import type { PropsWithChildren } from 'react';
+import { createContext, useContext, useReducer } from 'react';
+import {
+  Game,
+  Theme,
+  Player,
+  Winner,
+  GameAction,
+  Action,
+  Mark,
+} from '../types/game';
+
+const newGame: Game = {
+  theme: Theme.Hearts,
+  isOver: false,
+  activePlayer: Player.Cross,
+  field: new Array(9).fill(null, 0, 8),
+  winner: Winner.None,
+};
+
+export const GameStateContext = createContext(newGame);
+export const GameDispatchContext = createContext({});
+
+export function StateProvider({ children }: PropsWithChildren) {
+  const [gameState, dispatch] = useReducer(gameReducer, newGame);
+
+  return (
+    <GameStateContext.Provider value={gameState}>
+      <GameDispatchContext.Provider value={dispatch}>
+        {children}
+      </GameDispatchContext.Provider>
+    </GameStateContext.Provider>
+  );
 }
 
-const enum Player {
-  Cross = 'cross',
-  Circle = 'circle',
+export function useGameState() {
+  return useContext(GameStateContext);
+}
+
+export function useDispatch() {
+  return useContext(GameDispatchContext);
 }
 
 function togglePlayer(activePlayer: Player): Player {
   return activePlayer === Player.Cross ? Player.Circle : Player.Cross;
 }
 
-type Mark = Player | null;
-
-const enum GameAction {
-  ResetGame = 'reset game',
-  PlaceMark = 'place mark',
-  ChooseTheme = 'choose theme',
-}
-
-interface Game {
-  theme: Theme;
-  isOver: boolean;
-  activePlayer: Player;
-  field: Mark[];
-  winner: Winner;
-}
-
-const enum Winner {
-  Player = 'player',
-  Even = 'even',
-  None = 'none',
-}
-
-const placeMarkAction = (index: number, activePlayer: Player) =>
-  ({
-    type: GameAction.PlaceMark,
-    index,
-    activePlayer,
-  } as const);
-
-const resetGamekAction = () =>
-  ({
-    type: GameAction.ResetGame,
-  } as const);
-
-type Action =
-  | ReturnType<typeof placeMarkAction>
-  | ReturnType<typeof resetGamekAction>;
-
-export default function gameReducer(state: Game, action: Action): Game {
+function gameReducer(state: Game, action: Action): Game {
   switch (action.type) {
     case GameAction.ResetGame: {
       return newGame;
@@ -78,14 +73,6 @@ export default function gameReducer(state: Game, action: Action): Game {
     //   throw new Error(`No handler found for "${action}"`);
   }
 }
-
-export const newGame: Game = {
-  theme: Theme.Hearts,
-  isOver: false,
-  activePlayer: Player.Cross,
-  field: new Array(9).fill(null, 0, 8),
-  winner: Winner.None,
-};
 
 const winningCombination = [
   [0, 1, 2],
