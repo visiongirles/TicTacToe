@@ -1,4 +1,5 @@
 import type { PropsWithChildren } from 'react';
+import { Dispatch } from 'react';
 import { createContext, useContext, useReducer } from 'react';
 import {
   Game,
@@ -18,12 +19,29 @@ const newGame: Game = {
   winner: Winner.None,
 };
 
+// const something: Dispatch<Action>;
+
 export const GameStateContext = createContext(newGame);
-export const GameDispatchContext = createContext({});
+export const GameDispatchContext = createContext<Dispatch<Action>>(() => {});
+// export const GameDispatchContext = createContext<Dispatch<Action> | null>(null);
 
 export function StateProvider({ children }: PropsWithChildren) {
   const [gameState, dispatch] = useReducer(gameReducer, newGame);
 
+  // function onMark(
+  // index: number,
+  // columns: number[],
+  // col: number,
+  // activePlayer: Player
+  // ) {
+  //   dispatch({
+  //     type: GameAction.PlaceMark,
+  //     index: index,
+  //     activePlayer: activePlayer,
+  //   });
+  // }
+
+  console.log(dispatch);
   return (
     <GameStateContext.Provider value={gameState}>
       <GameDispatchContext.Provider value={dispatch}>
@@ -33,13 +51,15 @@ export function StateProvider({ children }: PropsWithChildren) {
   );
 }
 
-export function useGameState() {
+export function useGameStateContext() {
   return useContext(GameStateContext);
 }
 
-export function useDispatch() {
+export function useGameDispatchContext() {
   return useContext(GameDispatchContext);
 }
+
+// export
 
 function togglePlayer(activePlayer: Player): Player {
   return activePlayer === Player.Cross ? Player.Circle : Player.Cross;

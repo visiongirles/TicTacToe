@@ -1,4 +1,4 @@
-import { Player, PlayerValues, WinnerType } from '../logic/tictactoe';
+// import { Player, PlayerValues, WinnerType } from '../logic/tictactoe';
 import TryAgain from './TryAgain';
 
 // interface GameOverProps {

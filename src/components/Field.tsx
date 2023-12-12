@@ -1,18 +1,18 @@
+import { GameAction } from '../types/game';
 import Mark from './Mark';
+import { useGameDispatchContext, useGameStateContext } from './StateProvider';
 import TryAgain from './TryAgain';
-
-// import { PlayerValues } from '../logic/tictactoe';
-
-// interface FieldProps {
-//   status: string;
-//   squares: (PlayerValues | undefined)[];
-//   handleClick: (index: number) => void;
-//   resetGame: () => void;
-// }
 
 function Field() {
   const rows = [0, 1, 2];
   const columns = [0, 1, 2];
+  const squares = useGameStateContext().field;
+  const dispatch = useGameDispatchContext();
+  const activePlayer = useGameStateContext().activePlayer;
+  // function handleClick()
+
+  //TODO: ты можешь упростить жизнь вызывающему диспатч, не передавая его сырым,
+  // а сразу функцию onMark, тогда в компоненте тебе будет достаточно вызвать только ее
 
   const cells = rows.map((row) => (
     <div className='row' key={row}>
@@ -21,7 +21,14 @@ function Field() {
           <div className='col' key={col}>
             <Mark
               content={squares[row * columns.length + col]}
-              onMarkClick={() => handleClick(row * columns.length + col)}
+              // onMarkClick={() => handleClick(row * columns.length + col)}
+              onMarkClick={() =>
+                dispatch({
+                  type: GameAction.PlaceMark,
+                  index: row * columns.length + col,
+                  activePlayer: activePlayer,
+                })
+              }
             />
           </div>
         ))}

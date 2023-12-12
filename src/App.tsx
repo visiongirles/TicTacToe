@@ -1,28 +1,11 @@
-import { useReducer, useContext } from 'react';
-import Game from './components/Layout';
-import {
-  gameReducer,
-  newGame,
-  GameDispatchContext,
-  GameStateContext,
-} from './types/game';
-
-export function useGameState() {
-  return useContext(GameStateContext);
-}
-
-export function useTasksDispatch() {
-  return useContext(GameDispatchContext);
-}
+import Game from './components/Game';
+import { StateProvider } from './components/StateProvider';
 
 function App() {
-  const [gameState, dispatch] = useReducer(gameReducer, newGame);
   return (
-    <GameStateContext.Provider value={gameState}>
-      <GameDispatchContext.Provider value={dispatch}>
-        <Game />
-      </GameDispatchContext.Provider>
-    </GameStateContext.Provider>
+    <StateProvider>
+      <Game />
+    </StateProvider>
   );
 }
 
