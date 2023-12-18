@@ -21,8 +21,10 @@ export interface Game {
   isOver: boolean;
   activePlayer: Player;
   field: Mark[];
-  winner: Winner;
+  winnerState: Winner;
 }
+
+// export type Winner = null | Player;
 
 export const enum Winner {
   Player = 'player',

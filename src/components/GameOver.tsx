@@ -1,44 +1,47 @@
-// import { Player, PlayerValues, WinnerType } from '../logic/tictactoe';
+import { Winner, Player, GameAction } from '../types/game';
+import { useGameDispatchContext, useGameStateContext } from './StateProvider';
 import TryAgain from './TryAgain';
-
-// interface GameOverProps {
-//   winner: string;
-//   activePlayer?: PlayerValues;
-//   resetGame: () => void;
-// }
+import Confetti from './Confetti';
 
 function GameOver() {
-  console.log(activePlayer);
-  let status = 'Winner is';
-  let transformmedWinner;
-  if (winner === WinnerType.Draw) {
-    status = 'EVEN';
-    transformmedWinner = 'NO ONE WINS';
-    // переделать ниже
-  } else if (winner === WinnerType.Player) {
-    if (activePlayer === Player.Cross) {
-      transformmedWinner = 'X';
-    } else {
-      transformmedWinner = '❤️';
-    }
+  const gameState = useGameStateContext();
+  const dispatch = useGameDispatchContext();
+  console.log('Render GameOver.tsx');
+  let bannerText = '';
+  const activePlayer = gameState.activePlayer;
+  let activePlayerText = activePlayer === Player.Cross ? 'X' : '❤️';
+
+  function onReset() {
+    dispatch({ type: GameAction.ResetGame });
   }
 
-  const modalBodyClass =
-    winner === 'NONE'
-      ? 'modal-body container'
-      : 'modal-body container confetti-container confetti';
+  const winner = gameState.winnerState;
+  switch (winner) {
+    case Winner.Even:
+      bannerText = 'EVEN';
+      activePlayerText = 'NO ONE WINS';
+      break;
+    case Winner.Player:
+      bannerText = `And the winner is`;
+      activePlayerText = activePlayerText;
+      break;
+    case Winner.None:
+      break;
+  }
+
   return (
     <>
       <div className='modal'>
         <div className='modal-backdrop'></div>
-        <div className={modalBodyClass}>
-          <div className='text-emphasize bounce-in-left'>{status}</div>
+        <div className='modal-body container'>
+          <div className='text-emphasize bounce-in-left'>{bannerText}</div>
           <div className='text-emphasize bounce-in-right'>
-            {transformmedWinner}
+            {activePlayerText}
           </div>
-          <TryAgain origin='fromGameOver' resetGame={resetGame} />
+          <TryAgain origin='fromGameOver' resetGame={onReset} />
         </div>
       </div>
+      {winner !== Winner.Even && <Confetti />}
     </>
   );
 }

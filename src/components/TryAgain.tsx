@@ -4,6 +4,7 @@ interface TryAgainProps {
 }
 
 function TryAgain({ origin, resetGame }: TryAgainProps) {
+  console.log('Render TryAgain.tsx');
   const buttonStyle =
     origin == 'fromField' ? 'btn-reset' : 'btn-reset wobble-hor-bottom';
 

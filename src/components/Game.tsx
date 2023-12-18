@@ -1,18 +1,14 @@
 import Field from './Field';
 import GameOver from './GameOver';
-// import Confetti from './Confetti';
 import { useGameStateContext } from './StateProvider';
 
 export default function Game() {
   const gameState = useGameStateContext();
-  // const gameOver = <GameOver />;
-  // const confetti = <Confetti />;
+  console.log('Render Game.tsx');
   return (
     <>
       <Field />
-      {/* {gameState.isOver && <GameOver />} */}
-      {/* {gameState.isOver ? <GameOver /> : <></>} */}
-      {/* {gameOver && confetti && gameState.isOver} */}
+      {gameState.isOver ? <GameOver /> : <></>}
     </>
   );
 }

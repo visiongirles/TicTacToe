@@ -4,8 +4,8 @@ import { createContext, useContext, useReducer } from 'react';
 import {
   Game,
   Theme,
-  Player,
   Winner,
+  Player,
   GameAction,
   Action,
   Mark,
@@ -15,33 +15,18 @@ const newGame: Game = {
   theme: Theme.Hearts,
   isOver: false,
   activePlayer: Player.Cross,
-  field: new Array(9).fill(null, 0, 8),
-  winner: Winner.None,
+  field: new Array(9).fill(null, 0, 9),
+  winnerState: Winner.None,
 };
 
 // const something: Dispatch<Action>;
 
 export const GameStateContext = createContext(newGame);
 export const GameDispatchContext = createContext<Dispatch<Action>>(() => {});
-// export const GameDispatchContext = createContext<Dispatch<Action> | null>(null);
-
 export function StateProvider({ children }: PropsWithChildren) {
   const [gameState, dispatch] = useReducer(gameReducer, newGame);
+  console.log('Render StateProvider.tsx');
 
-  // function onMark(
-  // index: number,
-  // columns: number[],
-  // col: number,
-  // activePlayer: Player
-  // ) {
-  //   dispatch({
-  //     type: GameAction.PlaceMark,
-  //     index: index,
-  //     activePlayer: activePlayer,
-  //   });
-  // }
-
-  console.log(dispatch);
   return (
     <GameStateContext.Provider value={gameState}>
       <GameDispatchContext.Provider value={dispatch}>
@@ -72,19 +57,29 @@ function gameReducer(state: Game, action: Action): Game {
     }
 
     case GameAction.PlaceMark: {
+      let updatedPlayer = action.activePlayer;
       const updatedField = state.field.map((mark, index) => {
         if (index === action.index) {
+          if (mark !== null) return mark;
           const updatedMark = action.activePlayer;
+          updatedPlayer = togglePlayer(action.activePlayer);
           return updatedMark;
         }
         return mark;
       });
 
+      const [updatedWinner, updatedIsOver] = getWinner(updatedField);
+
+      if (updatedIsOver) {
+        updatedPlayer = togglePlayer(updatedPlayer);
+      }
+
       const updatedState: Game = {
         ...state,
-        activePlayer: togglePlayer(action.activePlayer),
+        isOver: updatedIsOver,
+        activePlayer: updatedPlayer,
         field: updatedField,
-        winner: calculateWinner(updatedField),
+        winnerState: updatedWinner,
       };
       return updatedState;
     }
@@ -105,16 +100,16 @@ const winningCombination = [
   [6, 7, 8],
 ];
 
-function calculateWinner(field: Mark[]): Winner {
+function getWinner(field: Mark[]): [Winner, boolean] {
   for (let index = 0; index < winningCombination.length; index++) {
     const [a, b, c] = winningCombination[index];
     if (field[a] && field[a] === field[b] && field[a] === field[c]) {
-      return Winner.Player;
+      return [Winner.Player, true];
     }
   }
 
   if (field.every((item) => item !== null)) {
-    return Winner.Even;
+    return [Winner.Even, true];
   }
-  return Winner.None;
+  return [Winner.None, false];
 }
